@@ -6,3 +6,5 @@ obj/
 big chungus.txt
 
 *.log
+BenchmarkDotNet.Artifacts/
+big chungus/
