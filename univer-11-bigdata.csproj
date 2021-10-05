@@ -6,4 +6,8 @@
     <RootNamespace>univer_11_bigdata</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="benchmarkdotnet" Version="0.13.1" />
+  </ItemGroup>
+
 </Project>
