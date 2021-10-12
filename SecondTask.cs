@@ -4,7 +4,27 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using System.Collections.Generic;
 
-BenchmarkRunner.Run<Benchy>();
+int _bufferSize = 1024 * 1024 * 2;
+var _bytes = new byte[_bufferSize];
+
+using (FileStream writeFileStream = new FileStream($"C:/Users/kuprianov/source/repos/univer-11-bigdata/big chungus/big chungus.txt", FileMode.Create, FileAccess.Write, FileShare.Write))
+{
+    using (FileStream sourceFileStream = new FileStream("C:/Users/kuprianov/source/repos/univer-11-bigdata/res.txt", FileMode.Open, FileAccess.Read))
+    {
+        writeFileStream.SetLength(sourceFileStream.Length * 2);
+        int bytesRead = -1;
+
+        for (var i = 0; i < 2; i++)
+        {
+            while ((bytesRead = sourceFileStream.Read(_bytes, 0, _bufferSize)) > 0)
+            {
+                writeFileStream.Write(_bytes, 0, bytesRead);
+            }
+            sourceFileStream.Position = 0;
+        }
+    }
+}
+// BenchmarkRunner.Run<Benchy>();
 
 [MemoryDiagnoser]
 [RPlotExporter]
