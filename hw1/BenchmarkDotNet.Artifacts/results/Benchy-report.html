@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchy-20211016-170322</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.19043.1288 (21H1/May2021Update)
+AMD Ryzen 7 3700X, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=6.0.100-rc.2.21505.57
+  [Host]   : .NET 5.0.11 (5.0.1121.47308), X64 RyuJIT
+  ShortRun : .NET 5.0.11 (5.0.1121.47308), X64 RyuJIT
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th> Method</th><th>Mbs</th><th>   Mean</th><th>   Error</th><th>StdDev</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>CopyWriteFlow</td><td>10</td><td>4.377 ms</td><td>0.2053 ms</td><td>0.0113 ms</td><td>1 KB</td>
+</tr><tr><td>CopyReadFlow</td><td>10</td><td>3.907 ms</td><td>0.5644 ms</td><td>0.0309 ms</td><td>1 KB</td>
+</tr><tr><td>CopyWriteFlow</td><td>100</td><td>45.440 ms</td><td>3.5592 ms</td><td>0.1951 ms</td><td>1 KB</td>
+</tr><tr><td>CopyReadFlow</td><td>100</td><td>39.982 ms</td><td>0.5268 ms</td><td>0.0289 ms</td><td>1 KB</td>
+</tr><tr><td>CopyWriteFlow</td><td>1000</td><td>444.213 ms</td><td>42.5494 ms</td><td>2.3323 ms</td><td>1 KB</td>
+</tr><tr><td>CopyReadFlow</td><td>1000</td><td>395.166 ms</td><td>109.1067 ms</td><td>5.9805 ms</td><td>1 KB</td>
+</tr><tr><td>CopyWriteFlow</td><td>10000</td><td>13,072.142 ms</td><td>10,361.4465 ms</td><td>567.9458 ms</td><td>1 KB</td>
+</tr><tr><td>CopyReadFlow</td><td>10000</td><td>13,071.949 ms</td><td>2,147.4722 ms</td><td>117.7102 ms</td><td>2 KB</td>
+</tr></tbody></table>
+</body>
+</html>

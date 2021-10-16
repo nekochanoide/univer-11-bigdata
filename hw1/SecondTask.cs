@@ -3,28 +3,51 @@ using System;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using System.Collections.Generic;
+using System.Linq;
 
 int _bufferSize = 1024 * 1024 * 2;
 var _bytes = new byte[_bufferSize];
-
-using (FileStream writeFileStream = new FileStream($"C:/Users/kuprianov/source/repos/univer-11-bigdata/big chungus/big chungus.txt", FileMode.Create, FileAccess.Write, FileShare.Write))
+var times = 0;
+var isBenchmarkCall = false;
+for (var i = 0; i < args.Length; i++)
 {
-    using (FileStream sourceFileStream = new FileStream("C:/Users/kuprianov/source/repos/univer-11-bigdata/res.txt", FileMode.Open, FileAccess.Read))
+    if (args[i] is "-b" or "--benchmark")
     {
-        writeFileStream.SetLength(sourceFileStream.Length * 2);
-        int bytesRead = -1;
+        isBenchmarkCall = true;
+        continue;
+    }
+    if (args[i] is "-t" or "--times")
+    {
+        times = int.Parse(args[++i]);
+        continue;
+    }
+}
 
-        for (var i = 0; i < 2; i++)
+if (!isBenchmarkCall)
+{
+    using (FileStream writeFileStream = new FileStream($@"{Environment.CurrentDirectory}/big-file.txt", FileMode.Create, FileAccess.Write, FileShare.Write))
+    {
+        using (FileStream sourceFileStream = new FileStream($@"{Environment.CurrentDirectory}/random-lines-n-times.txt", FileMode.Open, FileAccess.Read))
         {
-            while ((bytesRead = sourceFileStream.Read(_bytes, 0, _bufferSize)) > 0)
+            writeFileStream.SetLength(sourceFileStream.Length * times);
+            int bytesRead = -1;
+
+            for (var i = 0; i < times; i++)
             {
-                writeFileStream.Write(_bytes, 0, bytesRead);
+                while ((bytesRead = sourceFileStream.Read(_bytes, 0, _bufferSize)) > 0)
+                {
+                    writeFileStream.Write(_bytes, 0, bytesRead);
+                }
+                sourceFileStream.Position = 0;
             }
-            sourceFileStream.Position = 0;
         }
     }
 }
-// BenchmarkRunner.Run<Benchy>();
+
+if (isBenchmarkCall)
+{
+    BenchmarkRunner.Run<Benchy>();
+}
 
 [MemoryDiagnoser]
 [RPlotExporter]
@@ -33,6 +56,11 @@ public class Benchy
 {
     private const int _bufferSize = 1024 * 1024 * 2;
     private byte[] _bytes = new byte[_bufferSize];
+    private string _benchmarkEmitRootFolderPath = $"C:/Users/kuprianov/source/repos/univer-11-bigdata/hw1/";
+    private string _sourceFileName = "random-lines-n-times.txt";
+    private string _emitFileName = "big-file.txt";
+    private string SourceFilePath => _benchmarkEmitRootFolderPath + _sourceFileName;
+    private string EmitFilePath => _benchmarkEmitRootFolderPath + _emitFileName;
 
     [ParamsSource(nameof(AllMbsValues))]
     public static int Mbs;
@@ -42,9 +70,9 @@ public class Benchy
     [Benchmark]
     public void CopyWriteFlow()
     {
-        using (FileStream writeFileStream = new FileStream($"C:/Users/kuprianov/source/repos/univer-11-bigdata/big chungus/big chungus.txt", FileMode.Create, FileAccess.Write, FileShare.Write))
+        using (FileStream writeFileStream = new FileStream(EmitFilePath, FileMode.Create, FileAccess.Write, FileShare.Write))
         {
-            using (FileStream sourceFileStream = new FileStream("C:/Users/kuprianov/source/repos/univer-11-bigdata/res.txt", FileMode.Open, FileAccess.Read))
+            using (FileStream sourceFileStream = new FileStream(SourceFilePath, FileMode.Open, FileAccess.Read))
             {
                 writeFileStream.SetLength(sourceFileStream.Length * Mbs);
                 int bytesRead = -1;
@@ -64,9 +92,9 @@ public class Benchy
     [Benchmark]
     public void CopyReadFlow()
     {
-        using (FileStream writeFileStream = new FileStream($"C:/Users/kuprianov/source/repos/univer-11-bigdata/big chungus/big chungus.txt", FileMode.Create, FileAccess.Write, FileShare.Write))
+        using (FileStream writeFileStream = new FileStream(EmitFilePath, FileMode.Create, FileAccess.Write, FileShare.Write))
         {
-            using (FileStream sourceFileStream = new FileStream("C:/Users/kuprianov/source/repos/univer-11-bigdata/res.txt", FileMode.Open, FileAccess.Read))
+            using (FileStream sourceFileStream = new FileStream(SourceFilePath, FileMode.Open, FileAccess.Read))
             {
                 writeFileStream.SetLength(sourceFileStream.Length * Mbs);
                 int bytesRead = -1;
