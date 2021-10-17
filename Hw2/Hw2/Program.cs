@@ -1,42 +1,38 @@
-﻿using System.Text;
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 
-
-int _bufferSize = 1024 * 1024 * 2;
+var liddleFilePath = @"C:\Users\kuprianov\source\repos\univer-11-bigdata\Hw2\Hw2\Resources/demon.txt_Ascii.txt";
 var filePath = @"C:\Users\kuprianov\source\repos\univer-11-bigdata\Hw2\Hw2\Resources/big-file.txt";
+var checkFilePath = @"C:\Users\kuprianov\source\repos\univer-11-bigdata\Hw2\Hw2\Resources/check.txt";
+StreamReader sr = new StreamReader(filePath);
 
-var linesCount = 0;
-using (FileStream writeFileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+int counter = 0;
+string delim = " \t\n"; //maybe some more delimiters like ?! and so on
+var delims = delim.ToCharArray(); //maybe some more delimiters like ?! and so on
+string[] fields = null;
+string line = null;
+var dict = new ConcurrentDictionary<string, int>();
+
+var sw = new Stopwatch();
+sw.Start();
+while (!sr.EndOfStream)
 {
-    long fileLength = writeFileStream.Length;
-    Console.WriteLine("file length {0}", fileLength);
-
-    Func<long, long, ThreadStart> countSomeLines = (long offset, long count) =>
+    line = await sr.ReadLineAsync();//each time you read a line you should split it into the words
+    line.Trim();
+    fields = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+    foreach (var field in fields)
     {
-        return () =>
-        {
-            var _bytes = new byte[_bufferSize];
-            int bytesRead = -1;
-            while ((bytesRead = writeFileStream.Read(_bytes, 0, _bufferSize)) > 0)
-            {
-                for (int i = 0; i < bytesRead; i++)
-                {
-                    if (_bytes[i] == 10)
-                    {
-                        linesCount++;
-                    }
-                }
-            }
-        };
-    };
-
-    var thread = new Thread(countSomeLines(0, (long)Math.Floor((decimal)(fileLength / 2))));
-    thread.Start();
-
-    thread.Join();
+        dict.AddOrUpdate(field, 1, (_, v) => ++v);
+    }
+    counter += fields.Length; //and just add how many of them there is
 }
+sr.Close();
 
+foreach (var q in dict)
+{
+    await File.WriteAllLinesAsync(checkFilePath, dict.Select(kvp => kvp.Key + "\t" + kvp.Value).OrderBy(x => x));
+}
+sw.Stop();
+Console.WriteLine("done in {0}", sw.Elapsed);
+Console.WriteLine("done in {0}", sw.ElapsedMilliseconds);
 
-
-Console.WriteLine(linesCount);
