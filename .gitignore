@@ -7,4 +7,6 @@ big chungus.txt
 !hw1\BenchmarkDotNet.Artifacts\Benchy-20211016-170319.log
 hw1/random-lines-n-times.txt
 
-hw1/big-file.txt
+hw1/big-file*
+
+Hw2/Hw2/Resources/big-file*
