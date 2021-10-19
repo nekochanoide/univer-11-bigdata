@@ -1,4 +1,6 @@
-# Как работет приложение
+# Отчет по первой домашней работе ***`Куприянова Матвея`***
+
+> **[Ссылка на github](https://github.com/nekochanoide/univer-11-bigdata/tree/main/hw1)**
 
 ## Шаг 1
 
@@ -45,11 +47,11 @@
 
 [![График времени выполнения][boxplot-image-link]][boxplot-image-link]
 
-|        Method |   Mbs |          Mean |          Error |      StdDev | Allocated |
-|-------------- |------ |--------------:|---------------:|------------:|----------:|
-| CopyWriteFlow |    10 |      4.377 ms |      0.2053 ms |   0.0113 ms |      1 KB |
-| CopyWriteFlow |   100 |     45.440 ms |      3.5592 ms |   0.1951 ms |      1 KB |
-| CopyWriteFlow |  1000 |    444.213 ms |     42.5494 ms |   2.3323 ms |      1 KB |
+| Method        | Mbs   |          Mean |          Error |      StdDev | Allocated |
+| ------------- | ----- | ------------: | -------------: | ----------: | --------: |
+| CopyWriteFlow | 10    |      4.377 ms |      0.2053 ms |   0.0113 ms |      1 KB |
+| CopyWriteFlow | 100   |     45.440 ms |      3.5592 ms |   0.1951 ms |      1 KB |
+| CopyWriteFlow | 1000  |    444.213 ms |     42.5494 ms |   2.3323 ms |      1 KB |
 | CopyWriteFlow | 10000 | 13,072.142 ms | 10,361.4465 ms | 567.9458 ms |      1 KB |
 
 [boxplot-image-link]: ./BenchmarkDotNet.Artifacts/results/Benchy-boxplot.png
